@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+app.use(express.static('dist'))
 app.use(express.json());
 
 // Crear un token para mostrar los datos del cuerpo

@@ -63,7 +63,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.get('/api/info', (request, response) => {
   let fechaActual = new Date();
   console.log(fechaActual.toString());
-  const mensaje = `PhoneBook has info for ${persons.length} persons <p>${fechaActual.toString()}</p>`;
+  const mensaje = `PhoneBook has info for: ${persons.length} persons <p>${fechaActual.toString()}</p>`;
   response.setHeader('Content-Type', 'text/html');
   response.end(mensaje);
 });

@@ -89,7 +89,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 });
 
 
-
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 

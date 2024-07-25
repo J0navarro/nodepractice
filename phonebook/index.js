@@ -1,40 +1,28 @@
 const express = require('express')
 const morgan = require('morgan')
-const mongoose = require('mongoose')
+const connectdb = require('./config/conectdb')
+const Person = require('./models/person');
+require('dotenv').config()
+
 const app = express()
+
 app.use(express.static('dist'))
 app.use(express.json());
 
-
-const password = process.argv[2]
-
-// DO NOT SAVE YOUR PASSWORD TO GITHUB!!
-const url =
-  `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-
-const Note = mongoose.model('Note', noteSchema)
+connectdb();
 // Crear un token para mostrar los datos del cuerpo
 morgan.token('body', (req) => JSON.stringify(req.body));
 
 // Configuración de morgan para registrar en la consola
 app.use(morgan(':method :url :body'));
 
-
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
+  Person.find({}).then(persons => {
+    response.json(persons)
   })
 })
 app.get('/api/info', (request, response) => {
@@ -73,21 +61,17 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({ error: 'name or number is missing' });
   }
 
-  // Verificar si el nombre ya existe
-  const existingPerson = persons.find(person => person.name === name);
-  if (existingPerson) {
-    return response.status(400).json({ error: 'name must be unique' });
-  }
+ 
 
-  // Generar un nuevo ID
-  const id = Math.floor(Math.random() * 1000000); // Rango grande para evitar duplicados
+  const person = new Person({
+    name: name,
+    number: number,
+  })
 
-  // Crear la nueva persona
-  const newPerson = { id, name, number };
-  persons.push(newPerson);
-
-  // Responder con el nuevo objeto creado
-  response.status(201).json(newPerson);
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+    
+  })
 });
 
 const PORT = process.env.PORT || 3001

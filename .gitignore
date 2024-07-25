@@ -1,4 +1,4 @@
 # Ignorar la carpeta de módulos de Node
-node_modules/
+phonebook/node_modules/
 # Otras reglas (opcional)
-.env
+phonebook/*.env

@@ -99,7 +99,7 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-// este debe ser el último middleware cargado, ¡también todas las rutas deben ser registrada antes que esto!
+// este debe ser el último Middleware cargado, ¡también todas las rutas deben ser registrada antes que esto!
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001

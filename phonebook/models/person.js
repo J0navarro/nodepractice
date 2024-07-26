@@ -2,8 +2,16 @@ const mongoose = require('mongoose');
 
 // Definir el esquema
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        minLength: 3,
+        required: true
+      },
+    number: {
+        type: String,
+        minLength: 3,
+        required: true
+      },
   });
   //Formateo de respuesta
   personSchema.set('toJSON', {

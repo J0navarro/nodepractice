@@ -9,7 +9,14 @@ const personSchema = new mongoose.Schema({
       },
     number: {
         type: String,
-        minLength: 3,
+        minLength: 8,
+        validate: {
+            validator: function(numero) {
+                const regex = /^\d{2,3}-\d+$/; // Validar el formato "XX-XXXXXXX" o "XXX-XXXXXXXX"
+                return regex.test(numero);
+            },
+            message: props => `${props.value} is not a valid phone number!`
+        },
         required: true
       },
   });

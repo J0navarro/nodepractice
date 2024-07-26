@@ -1,8 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
-const connectdb = require('./config/conectdb')
+const connectdb = require('./utils/conectdb')
 const Person = require('./models/person');
-require('dotenv').config()
+const envi = require('./utils/config')
+const logger = require('./utils/logger')
 
 const app = express()
 
@@ -64,8 +65,8 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.get('/api/info', (request, response) => {
   let fechaActual = new Date();
-  console.log(fechaActual.toString());
-  const mensaje = `PhoneBook has info for: ${persons.length} persons <p>${fechaActual.toString()}</p>`;
+  logger.info(fechaActual.toString());
+  const mensaje = `PhoneBook has info for: ${response.length} persons <p>${fechaActual.toString()}</p>`;
   response.setHeader('Content-Type', 'text/html');
   response.end(mensaje);
 });
@@ -85,20 +86,23 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
   .then(result => {
-    response.status(204).end()
+    if (result) {
+      response.status(204).end()
+    }
+    
   })
   .catch(error => next(error))
 });
 
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.name)
+  logger.error(error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
-    console.error(error.message)
-    return response.status(400).json({ error: 'Error de validacion'})
+    logger.error(error.message)
+    return response.status(400).json({ error: 'Error de Validacion'})
   }
 
   next(error)
@@ -107,7 +111,7 @@ const errorHandler = (error, request, response, next) => {
 // este debe ser el último Middleware cargado, ¡también todas las rutas deben ser registrada antes que esto!
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 3001
+const PORT = envi.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info(`Server running on port ${PORT}`)
 })

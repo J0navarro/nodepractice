@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
-require('dotenv').config()
+const envi = require('./config')
 
-const uri = process.env.MONGODB_URI
 
 const connectdb = async () => {
     try {
-      const uri = process.env.MONGODB_URI; // Obtener la URI de la variable de entorno
+      const uri = envi.MONGODB_URI; // Obtener la URI de la variable de entorno
       await mongoose.connect(uri);
       console.log('Conexión a MongoDB exitosa');
     } catch (error) {

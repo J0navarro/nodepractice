@@ -10,7 +10,7 @@ const app = express()
 app.use(express.static('dist'))
 app.use(express.json());
 
-connectdb();
+
 // Crear un token para mostrar los datos del cuerpo
 morgan.token('body', (req) => JSON.stringify(req.body));
 
